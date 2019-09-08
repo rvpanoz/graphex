@@ -1,17 +1,15 @@
 import mongoose from "mongoose";
 import express from "express";
-import expressGraphQL from 'express-graphql'
+import expressGraphql from 'express-graphql'
 import session from "express-session";
 import cors from "cors";
 import bodyParser from "body-parser";
 import errorHandler from "errorhandler";
 import config from "./config";
-import { coordsRouter } from './routes'
+import schema from './graphql';
 
 const isProduction = process.env.NODE_ENV === "production";
 const { cookie, port, secret, mongoUrl } = config;
-
-// create application
 const app = express();
 
 // express config defaults
@@ -19,23 +17,18 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
-app.use(
-    session({
-        secret,
-        cookie,
-        resave: false,
-        saveUninitialized: false
-    })
-);
 
-// define routes
-app.use('/coords', coordsRouter);
+// define graphQL middleware
+app.use('/graphql', expressGraphql({
+    schema,
+    graphiql: true
+}));
 
 // create application/json parser
-const jsonParser = bodyParser.json();
+// const jsonParser = bodyParser.json();
 
 // create application/x-www-form-urlencoded parser
-const urlencodedParser = bodyParser.urlencoded({ extended: false });
+// const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // register errorHandler
 if (!isProduction) {
