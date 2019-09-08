@@ -1,0 +1,40 @@
+{
+  "name": "graphex",
+  "version": "1.0.0",
+  "description": "experiment using express, mongoose and graphQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rvpanoz/graphex.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rvpanoz/graphex/issues"
+  },
+  "homepage": "https://github.com/rvpanoz/graphex#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "2.7.1",
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "express-session": "^1.16.2",
+    "graphql": "^14.5.4",
+    "graphql-tools": "^4.0.5",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.6.13",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "errorhandler": "^1.5.1",
+    "nodemon": "^1.11.0"
+  }
+}
