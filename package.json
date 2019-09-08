@@ -4,6 +4,9 @@
   "description": "experiment using express, mongoose and graphQL",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon --exec babel-node src/server.js",
+    "serve": "node dist/server.js",
+    "build": "babel src --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,6 +37,7 @@
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "chalk": "^2.4.2",
     "errorhandler": "^1.5.1",
     "nodemon": "^1.11.0"
   }
