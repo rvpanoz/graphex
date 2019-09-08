@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 import express from "express";
+import expressGraphQL from 'express-graphql'
 import session from "express-session";
 import cors from "cors";
 import bodyParser from "body-parser";
 import errorHandler from "errorhandler";
 import config from "./config";
+import { coordsRouter } from './routes'
 
 const isProduction = process.env.NODE_ENV === "production";
 const { cookie, port, secret, mongoUrl } = config;
@@ -25,6 +27,9 @@ app.use(
         saveUninitialized: false
     })
 );
+
+// define routes
+app.use('/coords', coordsRouter);
 
 // create application/json parser
 const jsonParser = bodyParser.json();
