@@ -1,4 +1,5 @@
 import { GraphQLObjectType, GraphQLString, GraphQLSchema } from 'graphql';
+import { Coord } from '../models'
 
 const CoordType = new GraphQLObjectType({
     name: "Coord",
@@ -25,13 +26,47 @@ const RootQuery = new GraphQLObjectType({
                     type: GraphQLString
                 }
             },
-            resolve: (parent, args) => {
+            resolve: async (parent, args) => {
                 // get data from mongoose api
+                const { uid } = args
+
+                return await Coord.findOne({ uid }).exec()
             }
         }
     }
 })
 
+const Mutation = new GraphQLObjectType({
+    name: "Mutation",
+    fields: {
+        addCoord: {
+            type: CoordType,
+            args: {
+                uid: {
+                    type: GraphQLString
+                },
+                valueX: {
+                    type: GraphQLString
+                },
+                valueY: {
+                    type: GraphQLString
+                }
+            },
+            resolve: async (parent, args) => {
+                const { uid, valueX, valueY } = args;
+                const newCoord = new Coord({
+                    uid,
+                    valueX,
+                    valueY
+                });
+
+                return await newCoord.save()
+            }
+        }
+    }
+});
+
 export default new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: Mutation
 })
