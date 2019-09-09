@@ -5,7 +5,7 @@ import session from "express-session";
 import cors from "cors";
 import bodyParser from "body-parser";
 import errorHandler from "errorhandler";
-import config from "./configs";
+import config from "./config";
 import schema from "./graphql";
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -32,7 +32,7 @@ if (!isProduction) {
   app.use(errorHandler());
 }
 
-// start database connection
+// connect to mongodb
 if (isProduction) {
   mongoose.connect(process.env.MONGODB_URI);
 } else {
