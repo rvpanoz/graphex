@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import express from "express";
-import expressGraphql from 'express-graphql'
+import expressGraphql from "express-graphql";
 import session from "express-session";
 import cors from "cors";
 import bodyParser from "body-parser";
 import errorHandler from "errorhandler";
-import config from "./config";
-import schema from './graphql';
+import config from "./configs";
+import schema from "./graphql";
 
 const isProduction = process.env.NODE_ENV === "production";
 const { cookie, port, secret, mongoUrl } = config;
@@ -19,35 +19,32 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
 // define graphQL middleware
-app.use('/graphql', expressGraphql({
+app.use(
+  "/graphql",
+  expressGraphql({
     schema,
     graphiql: true
-}));
-
-// create application/json parser
-// const jsonParser = bodyParser.json();
-
-// create application/x-www-form-urlencoded parser
-// const urlencodedParser = bodyParser.urlencoded({ extended: false });
+  })
+);
 
 // register errorHandler
 if (!isProduction) {
-    app.use(errorHandler());
+  app.use(errorHandler());
 }
 
 // start database connection
 if (isProduction) {
-    mongoose.connect(process.env.MONGODB_URI);
+  mongoose.connect(process.env.MONGODB_URI);
 } else {
-    mongoose.connect(mongoUrl, {
-        useNewUrlParser: true
-    });
+  mongoose.connect(mongoUrl, {
+    useNewUrlParser: true
+  });
 
-    // log queries in the console
-    mongoose.set("debug", true);
+  // log queries in the console
+  mongoose.set("debug", true);
 
-    // disable buffering - https://mongoosejs.com/docs/connections.html
-    mongoose.set("bufferCommands", false);
+  // disable buffering - https://mongoosejs.com/docs/connections.html
+  mongoose.set("bufferCommands", false);
 }
 
 // db events handling
@@ -58,8 +55,8 @@ db.on("error", error => console.error(error));
 
 // connection is established
 db.once("open", () => {
-    // start the server
-    const server = app.listen(process.env.PORT || port, function () {
-        console.log("Listening on port " + server.address().port);
-    });
+  // start the server
+  const server = app.listen(process.env.PORT || port, function() {
+    console.log("Listening on port " + server.address().port);
+  });
 });

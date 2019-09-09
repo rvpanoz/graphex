@@ -62,3 +62,6 @@ typings/
 
 # build directory
 dist
+
+# dev config
+src/configs/dev.js
