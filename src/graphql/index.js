@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLSchema } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList } from 'graphql';
 import { Coord } from '../models'
 
 const CoordType = new GraphQLObjectType({
@@ -27,11 +27,15 @@ const RootQuery = new GraphQLObjectType({
                 }
             },
             resolve: async (parent, args) => {
-                // get data from mongoose api
                 const { uid } = args
 
                 return await Coord.findOne({ uid }).exec()
             }
+        },
+        allCoords: {
+            type: new GraphQLList(CoordType),
+
+            resolve: async () => await Coord.find({}).exec()
         }
     }
 })
