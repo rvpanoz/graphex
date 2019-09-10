@@ -1,41 +1,57 @@
-import { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList } from 'graphql';
-import { Coord } from '../models'
+import { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList, GraphQLEnumType, GraphQLInt } from 'graphql';
+import { Record } from '../models'
 
-const CoordType = new GraphQLObjectType({
-    name: "Coord",
+const WorkoutEnumType = new GraphQLEnumType({
+    name: "WorkoutEnumType",
+    values: {
+        CARDIO: { value: 1 },
+        STRENGTH: { value: 2 }
+    }
+});
+
+const WorkoutType = new GraphQLObjectType({
+    name: 'Workout',
     fields: {
-        uid: {
-            type: GraphQLString
+        workoutType: {
+            type: WorkoutEnumType
         },
-        valueX: {
-            type: GraphQLString
-        },
-        valueY: {
+        duration: {
             type: GraphQLString
         }
     }
 })
 
+const RecordType = new GraphQLObjectType({
+    name: "Record",
+    fields: {
+        uid: {
+            type: GraphQLString
+        },
+        workouts: new GraphQLList(WorkoutType),
+        createdAt: {
+            type: GraphQLString
+        },
+        updatedAt: {
+            type: GraphQLString
+        }
+    }
+});
+
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
-        coord: {
-            type: CoordType,
+        record: {
+            type: RecordType,
             args: {
                 uid: {
                     type: GraphQLString
                 }
             },
-            resolve: async (parent, args) => {
-                const { uid } = args
-
-                return await Coord.findOne({ uid }).exec()
-            }
+            resolve: async (parent, { uid }) => await Record.findOne({ uid }).exec()
         },
-        allCoords: {
-            type: new GraphQLList(CoordType),
-
-            resolve: async () => await Coord.find({}).exec()
+        allRecords: {
+            type: new GraphQLList(RecordType),
+            resolve: async () => await Record.find({}).exec()
         }
     }
 })
@@ -43,28 +59,29 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
-        addCoord: {
-            type: CoordType,
+        addRecord: {
+            type: RecordType,
             args: {
                 uid: {
                     type: GraphQLString
                 },
-                valueX: {
-                    type: GraphQLString
+                workoutType: {
+                    type: GraphQLInt
                 },
-                valueY: {
-                    type: GraphQLString
-                }
             },
             resolve: async (parent, args) => {
-                const { uid, valueX, valueY } = args;
-                const newCoord = new Coord({
+                const { uid, workoutType } = args;
+                const createdAt = new Date();
+                const updatedAt = new Date();
+
+                const newRecord = new Record({
                     uid,
-                    valueX,
-                    valueY
+                    workoutType,
+                    createdAt,
+                    updatedAt
                 });
 
-                return await newCoord.save()
+                return await newRecord.save()
             }
         }
     }

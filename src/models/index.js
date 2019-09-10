@@ -1,5 +1,5 @@
-import Coord from './coord';
+import Record from './record';
 
 export {
-    Coord
+    Record
 }
