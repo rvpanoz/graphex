@@ -1,33 +1,25 @@
-import { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList, GraphQLEnumType, GraphQLInt } from 'graphql';
+import mongoose from 'mongoose'
+import { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList, GraphQLEnumType, GraphQLInt, GraphQLFloat } from 'graphql';
 import { Record } from '../models'
 
-const WorkoutEnumType = new GraphQLEnumType({
-    name: "WorkoutEnumType",
+const GenreType = new GraphQLEnumType({
+    name: "GenreType",
     values: {
-        CARDIO: { value: 1 },
-        STRENGTH: { value: 2 }
+        house: { value: 'house' },
+        deep_house: { value: 'deep house' },
+        techno: { value: 'techno' },
     }
 });
-
-const WorkoutType = new GraphQLObjectType({
-    name: 'Workout',
-    fields: {
-        workoutType: {
-            type: WorkoutEnumType
-        },
-        duration: {
-            type: GraphQLString
-        }
-    }
-})
 
 const RecordType = new GraphQLObjectType({
     name: "Record",
     fields: {
-        uid: {
+        _id: {
             type: GraphQLString
         },
-        workouts: new GraphQLList(WorkoutType),
+        genre: {
+            type: GenreType,
+        },
         createdAt: {
             type: GraphQLString
         },
@@ -62,26 +54,18 @@ const Mutation = new GraphQLObjectType({
         addRecord: {
             type: RecordType,
             args: {
-                uid: {
-                    type: GraphQLString
-                },
-                workoutType: {
-                    type: GraphQLInt
-                },
+                genre: {
+                    type: GenreType
+                }
             },
             resolve: async (parent, args) => {
-                const { uid, workoutType } = args;
-                const createdAt = new Date();
-                const updatedAt = new Date();
-
-                const newRecord = new Record({
-                    uid,
-                    workoutType,
-                    createdAt,
-                    updatedAt
+                const { genre } = args;
+                console.log(Record)
+                const record = new Record({
+                    _id: new mongoose.Types.ObjectId(),
                 });
 
-                return await newRecord.save()
+                return await record.save()
             }
         }
     }
