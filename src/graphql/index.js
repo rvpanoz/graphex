@@ -1,8 +1,15 @@
 import mongoose from 'mongoose'
-import { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLList, GraphQLEnumType, GraphQLInt, GraphQLFloat } from 'graphql';
+import { 
+    GraphQLObjectType, 
+    GraphQLString, 
+    GraphQLSchema, 
+    GraphQLList, 
+    GraphQLEnumType
+} from 'graphql';
 import { Record } from '../models'
+import { buildSchema } from 'graphql';
 
-const GenreType = new GraphQLEnumType({
+const GenreEnumType = new GraphQLEnumType({
     name: "GenreType",
     values: {
         house: { value: 'house' },
@@ -17,8 +24,11 @@ const RecordType = new GraphQLObjectType({
         _id: {
             type: GraphQLString
         },
+        title: {
+            type: GraphQLString
+        },
         genre: {
-            type: GenreType,
+            type: GenreEnumType,
         },
         createdAt: {
             type: GraphQLString
@@ -32,11 +42,14 @@ const RecordType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
-        record: {
+        findRecord: {
             type: RecordType,
             args: {
-                uid: {
+                title: {
                     type: GraphQLString
+                },
+                genre: {
+                    type: GenreEnumType
                 }
             },
             resolve: async (parent, { uid }) => await Record.findOne({ uid }).exec()
@@ -54,15 +67,23 @@ const Mutation = new GraphQLObjectType({
         addRecord: {
             type: RecordType,
             args: {
+                title: {
+                    type: GraphQLString
+                },
                 genre: {
-                    type: GenreType
+                    type: GenreEnumType
                 }
             },
             resolve: async (parent, args) => {
-                const { genre } = args;
-                console.log(Record)
+                const { title, genre } = args;
+                const now = new Date();
+
                 const record = new Record({
                     _id: new mongoose.Types.ObjectId(),
+                    title,
+                    genre,
+                    createdAt: now.toString(),
+                    updatedAt: now.toString()
                 });
 
                 return await record.save()

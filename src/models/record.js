@@ -4,6 +4,7 @@ const { Schema, model } = mongoose;
 
 const recordSchema = new Schema({
     _id: Schema.Types.ObjectId,
+    title: String,
     genre: String,
     createdAt: Date,
     updatedAt: Date
