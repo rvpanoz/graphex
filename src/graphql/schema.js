@@ -1,17 +1,10 @@
-// TODO..
-const { buildSchema } = require('graphql');
+import { buildSchema } from 'graphql';
 
-const sdlSchema = `
-  type Record {
-    _id: String,
-    genre: String
-    title: String
-  }
+// Construct a schema, using GraphQL schema language using SDL
+var schema = buildSchema(`
   type Query {
-    getRecord(id: String!): Record
+    getRecord: String
   }
-`;
+`);
 
-const graphqlSchema = buildSchema(sdlSchema);
-
-export default graphqlSchema
+export default schema;

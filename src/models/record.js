@@ -4,10 +4,9 @@ const { Schema, model } = mongoose;
 
 const recordSchema = new Schema({
     _id: Schema.Types.ObjectId,
-    title: String,
-    genre: String,
-    createdAt: Date,
-    updatedAt: Date
+    student_id: Number,
+    scores: Object,
+    class_id: Number
 });
 
 const Record = new model('Record', recordSchema);
